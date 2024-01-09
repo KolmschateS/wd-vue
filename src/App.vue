@@ -6,22 +6,22 @@ import Gdpr from '@/components/Gdpr.vue'
 </script>
 
 <template>
-  <div class="bg-black">
+  <div>
     <Gdpr />
 
-    <div class="flex flex-col min-h-screen">
-    <!-- Top Navbar -->
-    <TopNav />
+    <div class="flex flex-col">
+      <!-- Top Navbar -->
+      <TopNav />
 
-    <!-- Router View (Main Content) -->
-    <div class="flex-grow pb-16 mt-8">
-     <RouterView />
-    </div>
-
-    <!-- Bottom Navbar -->
-    <footer>
       <BottomNav />
-    </footer>
+
+      <!-- Router View (Main Content) -->
+      <div class="flex-grow pt-10 bg-black">
+      <RouterView />
+      </div>
+
+      <!-- Make a div with a set height, the same as the bottom nav, with a black background -->
+      <div class="bg-black h-24"></div>
     </div>
   </div>
 </template>

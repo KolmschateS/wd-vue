@@ -43,18 +43,7 @@ const router = createRouter({
       component: () => import('../views/ProfileView.vue'),
       meta: {
         requiresGDPR: true, // GDPR acceptance required for this route
-      },
-    },
-    {
-      path: '/privacy',
-      name: 'privacy',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/PrivacyView.vue'),
-      meta: {
-        requiresGDPR: false, // GDPR acceptance required for this route
-      },
+      }
     }
   ]
 })
