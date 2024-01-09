@@ -7,7 +7,10 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: HomeView,
+      meta: {
+        requiresGDPR: true, // GDPR acceptance required for this route
+      },
     },
     {
       path: '/about',
@@ -15,7 +18,10 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      component: () => import('../views/AboutView.vue'),
+      meta: {
+        requiresGDPR: true, // GDPR acceptance required for this route
+      },
     },
     {
       path: '/contact',
@@ -23,7 +29,10 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/ContactView.vue')
+      component: () => import('../views/ContactView.vue'),
+      meta: {
+        requiresGDPR: true, // GDPR acceptance required for this route
+      },
     },
     {
       path: '/profile',
@@ -31,9 +40,39 @@ const router = createRouter({
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../views/ProfileView.vue')
+      component: () => import('../views/ProfileView.vue'),
+      meta: {
+        requiresGDPR: true, // GDPR acceptance required for this route
+      },
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/PrivacyView.vue'),
+      meta: {
+        requiresGDPR: false, // GDPR acceptance required for this route
+      },
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  const isGDPRAccepted = document.cookie.includes("gdpr_accepted=true");
+
+  // If the GDPR is not accepted, redirect to "/"
+  if (!isGDPRAccepted) {
+    // Prevent an infinite loop if the user is already on the home page
+    if (to.path !== '/') {
+      next({ path: '/' });
+    } else {
+      next();
+    }
+  } else {
+    next();
+  }
+});
 
 export default router

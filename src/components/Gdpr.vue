@@ -1,14 +1,15 @@
+<script setup>
+import { RouterLink } from 'vue-router'
+
+</script>
 <template>
-    <div v-if="!isGDPRAccepted" class="gdpr-overlay">
-      <div class="gdpr-content">
-        <!-- Your GDPR content goes here -->
-        <p>We use cookies to provide the best experience. By continuing to use our site, you agree to our privacy policy.</p>
-        <button @click="acceptGDPR">Accept</button>
-      </div>
-    </div>
-    <div v-else>
-      <!-- Your main application content goes here -->
-      <router-view />
+    <div v-if="!isGDPRAccepted" class="gdpr-overlay backdrop-blur-md p-12 justify-center items-center">
+      <div class="flex items-center">
+        <div class="flex-row text-white">
+            <p>We use cookies to provide the best experience. By continuing to use our site, you agree to our privacy policy</p>
+        </div>
+        <button @click="acceptGDPR" class="flex-row text-black bg-white font-bold p-2 items-center">Accept</button>
+        </div>
     </div>
   </template>
   
@@ -46,16 +47,7 @@
     height: 100%;
     background: rgba(0, 0, 0, 0.8);
     display: flex;
-    justify-content: center;
-    align-items: center;
     z-index: 1000;
-  }
-  
-  .gdpr-content {
-    background: #fff;
-    padding: 20px;
-    border-radius: 8px;
-    text-align: center;
   }
   
   /* Add more styles as needed */

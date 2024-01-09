@@ -2,10 +2,13 @@
 import { RouterLink, RouterView } from 'vue-router'
 import TopNav from '@/components/TopNav.vue'
 import BottomNav from '@/components/BottomNav.vue'
+import Gdpr from '@/components/Gdpr.vue'
 </script>
 
 <template>
   <div class="bg-black">
+    <Gdpr />
+
     <div class="flex flex-col min-h-screen">
     <!-- Top Navbar -->
     <TopNav />
