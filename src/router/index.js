@@ -45,7 +45,11 @@ const router = createRouter({
         requiresGDPR: true, // GDPR acceptance required for this route
       }
     }
-  ]
+  ],
+  scrollBehavior(to, from, savedPosition) {
+    // Scroll to the top of the page
+    return { top: 0 };
+  }
 })
 
 router.beforeEach((to, from, next) => {

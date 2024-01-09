@@ -25,14 +25,14 @@
 
       <!-- Profile button -->
       <!-- Selected -->
-      <router-link to="/profile" class="text-white hover:bg-zinc-800 ml-8 p-3 rounded-lg" v-if="isCurrentPage('/profile')">
+      <!-- <router-link to="/profile" class="text-white hover:bg-zinc-800 ml-8 p-3 rounded-lg" v-if="isCurrentPage('/profile')">
         <img src="@/assets/profile-selected.svg" alt="About" style="height: 40px;"/>
-      </router-link>
+      </router-link> -->
 
       <!-- Unselected -->
-      <router-link to="/profile" class="text-white hover:bg-zinc-800 ml-8 p-3 rounded-lg" v-if="!isCurrentPage('/profile')">
+      <!-- <router-link to="/profile" class="text-white hover:bg-zinc-800 ml-8 p-3 rounded-lg" v-if="!isCurrentPage('/profile')">
         <img src="@/assets/profile-unselected.svg" alt="About" style="height: 40px;"/>
-      </router-link>
+      </router-link> -->
     </div>
   </header>
 </template>
