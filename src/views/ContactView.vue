@@ -2,7 +2,7 @@
 
 <template>
   <div class="">
-    <div class="flex flex-col p-6">
+    <div class="flex flex-col p-6 ">
       <div class="flex flex-row items-end">
         <h1 class="text-2xl text-zinc-200 font-bold">Get</h1>
         <h2 class="text-2xl text-zinc-500 ml-2">in touch.</h2>
