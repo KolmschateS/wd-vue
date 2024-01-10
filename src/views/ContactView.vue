@@ -19,7 +19,7 @@
             type="text"
             id="name"
             v-model="formData.name"
-            class="appearance-none rounded w-full py-3 px-3 mt-1 text-zinc-200 leading-tight bg-zinc-900 border border-transparent focus:border focus:border-zinc-800 focus:outline-none focus:shadow-outline"
+            class="appearance-none rounded-lg w-full py-3 px-3 mt-1 text-zinc-200 leading-tight bg-zinc-900 border border-transparent focus:border focus:border-zinc-800 focus:outline-none focus:shadow-outline"
           />
           <p v-if="errorData.name != ''" class="text-red-500 text-xs italic">
             {{ errorData.name }}
@@ -31,7 +31,7 @@
           <input
             id="email"
             v-model="formData.email"
-            class="appearance-none rounded w-full py-3 px-3 mt-1 text-zinc-200 leading-tight bg-zinc-900 border border-transparent focus:border focus:border-zinc-800 focus:outline-none focus:shadow-outline"
+            class="appearance-none rounded-lg w-full py-3 px-3 mt-1 text-zinc-200 leading-tight bg-zinc-900 border border-transparent focus:border focus:border-zinc-800 focus:outline-none focus:shadow-outline"
           />
           <p v-if="errorData.email != ''" class="text-red-500 text-xs italic">
             {{ errorData.email }}
@@ -44,7 +44,7 @@
             type="text"
             id="subject"
             v-model="formData.subject"
-            class="appearance-none rounded w-full py-3 px-3 mt-1 text-zinc-200 leading-tight bg-zinc-900 border border-transparent focus:border focus:border-zinc-800 focus:outline-none focus:shadow-outline"
+            class="appearance-none rounded-lg w-full py-3 px-3 mt-1 text-zinc-200 leading-tight bg-zinc-900 border border-transparent focus:border focus:border-zinc-800 focus:outline-none focus:shadow-outline"
           />
           <p v-if="errorData.subject != ''" class="text-red-500 text-xs italic">
             {{ errorData.subject }}
@@ -56,7 +56,7 @@
           <textarea
             id="message"
             v-model="formData.message"
-            class="appearance-none rounded w-full py-3 px-3 mt-1 text-zinc-200 leading-tight bg-zinc-900 border border-transparent focus:border focus:border-zinc-800 focus:outline-none focus:shadow-outline"
+            class="appearance-none rounded-lg w-full py-3 px-3 mt-1 text-zinc-200 leading-tight bg-zinc-900 border border-transparent focus:border focus:border-zinc-800 focus:outline-none focus:shadow-outline"
           ></textarea>
           <p v-if="errorData.message != ''" class="text-red-500 text-xs italic">
             {{ errorData.message }}
@@ -66,6 +66,58 @@
             class="text-red-500 text-xs italic"
           >
             {{ errorData.serverError }}
+          </p>
+        </div>
+
+        <div class="bg-zinc-200 rounded-lg p-3 mb-4">
+          <label for="captcha" class="text-zinc-900 font-bold">Captcha</label>
+          <p class="text-zinc-900 text-sm">Please prove you are human.</p>
+
+          <button
+            type="button"
+            v-if="this.captcha.text == ''"
+            @click="setCaptcha"
+            class="bg-zinc-900 hover:bg-zinc-800 text-zinc-200 font-bold py-2 px-4 mt-2 focus:outline-none focus:shadow-outline"
+          >
+            Generate captcha
+          </button>
+
+          <div v-if="!captcha.validated && captcha.text != ''" class="mt-6">
+            <p class="text-zinc-900 text-sm font-bold">
+              {{ this.captcha.text }}
+            </p>
+            <p class="text-zinc-900 text-sm">
+              Please enter the
+              <span class="font-bold">{{
+                this.captchaText[this.captcha.index]
+              }}</span>
+              character for the above combination.
+            </p>
+            <input
+              type="text"
+              id="captcha"
+              v-model="formData.captcha"
+              class="appearance-none rounded-lg w-full py-3 px-3 mt-1 text-zinc-200 leading-tight bg-zinc-900 border border-transparent focus:border focus:border-zinc-800 focus:outline-none focus:shadow-outline"
+            />
+            <button
+              type="button"
+              @click="submitCaptcha"
+              class="bg-zinc-900 hover:bg-zinc-800 text-zinc-200 font-bold py-2 px-4 mt-2 focus:outline-none focus:shadow-outline"
+            >
+              Validate
+            </button>
+          </div>
+
+          <div v-if="captcha.validated" class="flex flex-col items-center">
+            <div class="flex flex-row p-4">
+              <h1 class="text-xl text-zinc-500">You are</h1>
+              <h2 class="text-xl text-zinc-900 ml-1.5 font-bold">human.</h2>
+            </div>
+            <p class="text-xs text-zinc-600">You can submit the form now.</p>
+          </div>
+
+          <p v-if="errorData.captcha != ''" class="text-red-500 text-xs italic">
+            {{ errorData.captcha }}
           </p>
         </div>
 
@@ -89,11 +141,10 @@
             <h1 class="text-zinc-200 font-xl font-semibold">What's next?</h1>
           </div>
           <div class="flex flex-row items-center justify-center">
-            <div class="hover:bg-zinc-800 bg-zinc-900 rounded-lg flex-col p-3 m-2">
-              <router-link
-                to="/"
-                class="items-center flex flex-col"
-              >
+            <div
+              class="hover:bg-zinc-800 bg-zinc-900 rounded-lg flex-col p-3 m-2"
+            >
+              <router-link to="/" class="items-center flex flex-col">
                 <img
                   src="../assets/logo.svg"
                   alt="github logo"
@@ -103,11 +154,10 @@
                 <h2 class="text-zinc-200 text-md font-bold">Home</h2>
               </router-link>
             </div>
-            <div class="hover:bg-zinc-800 bg-zinc-900 rounded-lg flex-col p-3 m-2">
-              <router-link
-                to="/about"
-                class="items-center flex flex-col"
-              >
+            <div
+              class="hover:bg-zinc-800 bg-zinc-900 rounded-lg flex-col p-3 m-2"
+            >
+              <router-link to="/about" class="items-center flex flex-col">
                 <img
                   src="../assets/info-unselected.svg"
                   alt="github logo"
@@ -135,15 +185,23 @@ export default {
         email: "",
         subject: "",
         message: "",
+        captcha: "",
       },
       errorData: {
         name: "",
         email: "",
         subject: "",
         message: "",
+        captcha: "",
         serverError: "",
       },
       formSent: false,
+      captcha: {
+        text: "",
+        index: null,
+        validated: false,
+      },
+      captchaText: ["first", "second", "third", "fourth", "fifth"],
     };
   },
   methods: {
@@ -154,6 +212,7 @@ export default {
         true
       );
       this.errorData.email = this.validateEmailInput(this.formData.email, true);
+
       this.errorData.subject = this.validateTextInput(
         this.formData.subject,
         200,
@@ -165,12 +224,19 @@ export default {
         true
       );
 
+      if (this.captcha.validated == false) {
+        this.errorData.captcha = "Please validate the captcha.";
+      } else {
+        this.errorData.captcha = "";
+      }
+
       // check if there are no errors
       if (
         this.errorData.name == "" &&
         this.errorData.email == "" &&
         this.errorData.subject == "" &&
-        this.errorData.message == ""
+        this.errorData.message == "" &&
+        this.captcha.validated == true
       ) {
         this.submitForm();
       }
@@ -210,6 +276,34 @@ export default {
         errorData = "This field must be a valid email address.";
       }
       return errorData;
+    },
+    setCaptcha() {
+      this.captcha.text = this.generateCaptcha();
+      this.captcha.index = this.setCaptchaIndex(this.captcha.text);
+      this.captcha.result = this.captcha.text[this.captcha.index];
+    },
+    // generate a random captcha
+    generateCaptcha() {
+      var result = "";
+      var possible =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+      for (var i = 0; i < 5; i++)
+        result += possible.charAt(Math.floor(Math.random() * possible.length));
+
+      return result;
+    },
+    setCaptchaIndex(captcha) {
+      var index = Math.floor(Math.random() * captcha.length);
+      return index;
+    },
+    submitCaptcha() {
+      if (this.formData.captcha == this.captcha.result) {
+        this.captcha.validated = true;
+      } else {
+        this.captcha.validated = false;
+        this.errorData.captcha = "The captcha is incorrect.";
+      }
     },
   },
 };
