@@ -1,7 +1,7 @@
 <!-- ContactForm.vue -->
 
 <template>
-  <div class="h-screen">
+  <div class="min-h-screen">
     <div class="flex flex-col p-6">
       <div class="flex flex-row items-end">
         <h1 class="text-2xl text-zinc-200 font-bold">Get</h1>
@@ -12,7 +12,7 @@
       </h2>
     </div>
     <div class="p-6 max-w-2xl mx-auto justify-center">
-      <form @submit.prevent="submitForm" class="bg-black">
+      <form v-if="!this.formSent" @submit.prevent="handleForm" class="bg-black">
         <div class="mb-4">
           <label for="name" class="text-zinc-200 font-normal">Name</label>
           <input
@@ -20,19 +20,22 @@
             id="name"
             v-model="formData.name"
             class="appearance-none rounded w-full py-3 px-3 mt-1 text-zinc-200 leading-tight bg-zinc-900 border border-transparent focus:border focus:border-zinc-800 focus:outline-none focus:shadow-outline"
-            required
           />
+          <p v-if="errorData.name != ''" class="text-red-500 text-xs italic">
+            {{ errorData.name }}
+          </p>
         </div>
 
         <div class="mb-4">
           <label for="email" class="text-zinc-200 font-normal">Email</label>
           <input
-            type="email"
             id="email"
             v-model="formData.email"
             class="appearance-none rounded w-full py-3 px-3 mt-1 text-zinc-200 leading-tight bg-zinc-900 border border-transparent focus:border focus:border-zinc-800 focus:outline-none focus:shadow-outline"
-            required
           />
+          <p v-if="errorData.email != ''" class="text-red-500 text-xs italic">
+            {{ errorData.email }}
+          </p>
         </div>
 
         <div class="mb-4">
@@ -42,8 +45,10 @@
             id="subject"
             v-model="formData.subject"
             class="appearance-none rounded w-full py-3 px-3 mt-1 text-zinc-200 leading-tight bg-zinc-900 border border-transparent focus:border focus:border-zinc-800 focus:outline-none focus:shadow-outline"
-            required
           />
+          <p v-if="errorData.subject != ''" class="text-red-500 text-xs italic">
+            {{ errorData.subject }}
+          </p>
         </div>
 
         <div class="mb-4">
@@ -52,8 +57,16 @@
             id="message"
             v-model="formData.message"
             class="appearance-none rounded w-full py-3 px-3 mt-1 text-zinc-200 leading-tight bg-zinc-900 border border-transparent focus:border focus:border-zinc-800 focus:outline-none focus:shadow-outline"
-            required
           ></textarea>
+          <p v-if="errorData.message != ''" class="text-red-500 text-xs italic">
+            {{ errorData.message }}
+          </p>
+          <p
+            v-if="errorData.serverError != ''"
+            class="text-red-500 text-xs italic"
+          >
+            {{ errorData.serverError }}
+          </p>
         </div>
 
         <div class="flex justify-center">
@@ -65,6 +78,48 @@
           </button>
         </div>
       </form>
+      <div v-if="this.formSent" class="flex flex-col items-center p-6">
+        <h2 class="text-zinc-300 text-sm">We have received your message.</h2>
+        <div class="flex flex-row">
+          <h2 class="text-zinc-200 text-2xl font-bold">We will</h2>
+          <h2 class="text-zinc-500 text-2xl ml-1.5">get in touch.</h2>
+        </div>
+        <div class="flex flex-col items-center justify-center mt-6">
+          <div>
+            <h1 class="text-zinc-200 font-xl font-semibold">What's next?</h1>
+          </div>
+          <div class="flex flex-row items-center justify-center">
+            <div class="hover:bg-zinc-800 bg-zinc-900 rounded-lg flex-col p-3 m-2">
+              <router-link
+                to="/"
+                class="items-center flex flex-col"
+              >
+                <img
+                  src="../assets/logo.svg"
+                  alt="github logo"
+                  class="max-h-16 p-3"
+                />
+                <h1 class="text-zinc-500 text-sm">Play a game</h1>
+                <h2 class="text-zinc-200 text-md font-bold">Home</h2>
+              </router-link>
+            </div>
+            <div class="hover:bg-zinc-800 bg-zinc-900 rounded-lg flex-col p-3 m-2">
+              <router-link
+                to="/about"
+                class="items-center flex flex-col"
+              >
+                <img
+                  src="../assets/info-unselected.svg"
+                  alt="github logo"
+                  class="max-h-16 p-3"
+                />
+                <h1 class="text-zinc-500 text-sm">Read more</h1>
+                <h2 class="text-zinc-200 text-md font-bold">About</h2>
+              </router-link>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -81,20 +136,80 @@ export default {
         subject: "",
         message: "",
       },
+      errorData: {
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+        serverError: "",
+      },
+      formSent: false,
     };
   },
   methods: {
+    handleForm() {
+      this.errorData.name = this.validateTextInput(
+        this.formData.name,
+        200,
+        true
+      );
+      this.errorData.email = this.validateEmailInput(this.formData.email, true);
+      this.errorData.subject = this.validateTextInput(
+        this.formData.subject,
+        200,
+        true
+      );
+      this.errorData.message = this.validateTextInput(
+        this.formData.message,
+        600,
+        true
+      );
+
+      // check if there are no errors
+      if (
+        this.errorData.name == "" &&
+        this.errorData.email == "" &&
+        this.errorData.subject == "" &&
+        this.errorData.message == ""
+      ) {
+        this.submitForm();
+      }
+    },
     submitForm() {
       axios
-        .post("http://localhost:8000/api/contact/", this.formData)
+        .post("http://localhost:8000/api/contact", this.formData)
         .then((response) => {
+          this.formSent = true;
           console.log(response.data.message);
-          // Handle success, e.g., show a success message
+          this.errorData.serverError = "";
         })
         .catch((error) => {
-          console.error(error.response.data.errors);
-          // Handle errors, e.g., display validation errors
+          // show error message
+          this.errorData.serverError =
+            "Server couldn't handle request, try again later.";
+          console.error(error.response);
         });
+    },
+    validateTextInput(formDataInput, maxCharacters, required) {
+      var errorData = "";
+      if (required && formDataInput == "") {
+        errorData = "This field is required.";
+      } else if (formDataInput.length > maxCharacters) {
+        errorData =
+          "This field can't be longer than " + maxCharacters + " characters.";
+      }
+      return errorData;
+    },
+    validateEmailInput(data, required) {
+      // use regex to check if email is valid
+      var errorData = "";
+      var regex = /\S+@\S+\.\S+/;
+      if (required && data == "") {
+        errorData = "This field is required.";
+      } else if (!regex.test(data)) {
+        errorData = "This field must be a valid email address.";
+      }
+      return errorData;
     },
   },
 };
