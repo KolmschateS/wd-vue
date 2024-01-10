@@ -9,7 +9,7 @@ import Gdpr from '@/components/Gdpr.vue'
   <div>
     <Gdpr />
 
-    <div class="flex flex-col">
+    <div class="flex flex-col min-h-screen">
       <!-- Top Navbar -->
       <TopNav />
 
